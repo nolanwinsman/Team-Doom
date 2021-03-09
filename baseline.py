@@ -103,6 +103,10 @@ class Net(nn.Module):
 
 criterion = nn.MSELoss()
 
+#TODO write function
+#takes int x and list l, should write to txt a line "x, l[x]" ignore quotes
+def writeToTxt(x, l):
+    print("do this")
 
 def learn(s1, target_q):
     s1 = torch.from_numpy(s1)
@@ -125,7 +129,7 @@ def get_best_action(state):
     q = get_q_values(state)
     m, index = torch.max(q, 1)
     #index = index.cuda()
-    #action = index.data.numpy()[0]
+    action = index.data.numpy()[0]
     return action
 
 
@@ -177,6 +181,7 @@ def perform_learning_step(epoch):
         s1 = s1.reshape([1, 1, resolution[0], resolution[1]])
         a = get_best_action(s1)
     reward = game.make_action(actions[a], frame_repeat)
+    #print(reward)
 
     isterminal = game.is_episode_finished()
     s2 = preprocess(game.get_state().screen_buffer) if not isterminal else None
@@ -254,6 +259,10 @@ if __name__ == '__main__':
 
             print("Results: mean: %.1f +/- %.1f," % (train_scores.mean(), train_scores.std()), \
                   "min: %.1f," % train_scores.min(), "max: %.1f," % train_scores.max())
+            #TODO Tim instead of printing the train_scores of x it will write to a txt file
+            #make function
+            for x in range(0,len(train_scores)):
+                writeToTXT(x, train_scores)
 
             print("\nTesting...")
             test_episode = []
