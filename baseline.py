@@ -262,7 +262,7 @@ if __name__ == '__main__':
             #TODO Tim instead of printing the train_scores of x it will write to a txt file
             #make function
             for x in range(0,len(train_scores)):
-                writeToTXT(x, train_scores)
+                writeToTXT(x, train_scores) #writeToTXT is currently an empty definition
 
             print("\nTesting...")
             test_episode = []
