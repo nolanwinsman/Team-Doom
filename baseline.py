@@ -223,7 +223,7 @@ if __name__ == '__main__':
 
     if load_model:
         print("Loading model from: ", model_savefile)
-        model = torch.cuda.load(model_savefile)
+        model = torch.load(model_savefile)
     else:
 	    print("Model not loaded")
 	    model = Net(len(actions))
