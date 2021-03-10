@@ -3,6 +3,7 @@
 
 # E. Culurciello
 # August 2017
+# Ethan was here hehe
 
 from __future__ import division
 from __future__ import print_function
