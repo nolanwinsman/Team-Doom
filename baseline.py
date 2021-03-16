@@ -18,6 +18,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+import os.path
 from torchvision import datasets, transforms
 from torch.autograd import Variable
 from tqdm import trange
@@ -107,7 +108,24 @@ criterion = nn.MSELoss()
 #TODO write function
 #takes int x and list l, should write to txt a line "x, l[x]" ignore quotes
 def writeToTxt(x, l):
-    print("do this")
+    path = "results/"
+    name = "results"
+    suf = ".txt"
+    count = 0
+    while os.path.isfile(path + name + str(count) + suf):
+        print(count)
+        count += 1
+    print("exiting while at Count = " + str(count))
+    f = open(path + name + str(count) + suf, x)
+    print("created new file in results: " + name + str(count) + suf)
+    f.write(str(x) + " " + str(l))
+    f.close()
+    print("done writing to file")
+
+
+    #if os.path.isfile("results/test.txt"):
+        #print("it exists")
+    
 
 def learn(s1, target_q):
     s1 = torch.from_numpy(s1)
@@ -215,6 +233,7 @@ if __name__ == '__main__':
     # Action = which buttons are pressed
     print('Availible Buttons: ',game.get_available_buttons())
     print('Availible Actions: ',actions_num)
+    writeToTxt("a", "b")
   
     for perm in it.product([False, True], repeat=actions_num):
         actions.append(list(perm))
