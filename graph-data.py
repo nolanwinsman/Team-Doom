@@ -2,9 +2,9 @@ from matplotlib import pyplot as plt
 
 
 
-def plotData(listX, listY):
+def plotData(listX, listY, title):
     plt.plot(listX, listY)
-    plt.title("Reward Per Episode")
+    plt.title(title)
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.show()
@@ -22,4 +22,4 @@ def loadInData(n):
 if __name__ == '__main__':
     n = input("Which number results file do you want? ")
     x, y = loadInData(n)
-    plotData(x,y)
+    plotData(x,y, "Walk Straight")

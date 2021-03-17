@@ -26,7 +26,7 @@ from tqdm import trange
 # Q-learning settings
 learning_rate = 0.00025
 discount_factor = 0.99
-epochs = 20
+epochs = 25
 learning_steps_per_epoch = 2000
 replay_memory_size = 10000
 
