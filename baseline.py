@@ -47,6 +47,7 @@ load_model = False
 skip_learning = False
 
 rewards_per_episode = []
+avg_reward_per_episode = [] #TODO store the average score per episode
 
 # Configuration file path
 config_file_path = "scenarios/basic.cfg"
@@ -282,8 +283,8 @@ if __name__ == '__main__':
 
             print("Results: mean: %.1f +/- %.1f," % (train_scores.mean(), train_scores.std()), \
                   "min: %.1f," % train_scores.min(), "max: %.1f," % train_scores.max())
-            #TODO Tim instead of printing the train_scores of x it will write to a txt file
-            #make function
+            avg_reward_per_episode.append(train_scores.mean())
+            #adds the data from train_scores into global list
             for s in train_scores:
                 rewards_per_episode.append(s)
             #writeToFile(train_scores) 
