@@ -8,10 +8,10 @@ def plotData(listX, listY):
     plt.xlabel("Episodes")
     plt.ylabel("Reward")
     plt.show()
-def loadInData():
+def loadInData(n):
     x = []
     y = []
-    file = open(r"results/results1.txt", "r")
+    file = open("results/results"+ str(n) + ".txt", "r")
     for line in file:
         seperator = line.split(",")
         x.append(float(seperator[0]))
@@ -20,5 +20,6 @@ def loadInData():
 
 
 if __name__ == '__main__':
-    x, y = loadInData()
+    n = input("Which number results file do you want? ")
+    x, y = loadInData(n)
     plotData(x,y)

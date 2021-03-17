@@ -26,7 +26,7 @@ from tqdm import trange
 # Q-learning settings
 learning_rate = 0.00025
 discount_factor = 0.99
-epochs = 2
+epochs = 20
 learning_steps_per_epoch = 2000
 replay_memory_size = 10000
 
@@ -50,7 +50,7 @@ rewards_per_episode = []
 avg_reward_per_episode = [] #TODO store the average score per episode
 
 # Configuration file path
-config_file_path = "scenarios/basic.cfg"
+config_file_path = "scenarios/nolan_made.cfg"
 # config_file_path = "../../scenarios/rocket_basic.cfg"
 # config_file_path = "../../scenarios/basic.cfg"
 
