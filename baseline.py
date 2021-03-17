@@ -26,7 +26,7 @@ from tqdm import trange
 # Q-learning settings
 learning_rate = 0.00025
 discount_factor = 0.99
-epochs = 1
+epochs = 2
 learning_steps_per_epoch = 2000
 replay_memory_size = 10000
 
@@ -45,6 +45,8 @@ model_savefile = "./model-doom.pth"
 save_model = True
 load_model = False
 skip_learning = False
+
+rewards_per_episode = []
 
 # Configuration file path
 config_file_path = "scenarios/basic.cfg"
@@ -107,18 +109,19 @@ criterion = nn.MSELoss()
 
 #TODO write function
 #takes int x and list l, should write to txt a line "x, l[x]" ignore quotes
-def writeToTxt(x, l):
+def writeToFile(rewards):
     path = "results/"
     name = "results"
     suf = ".txt"
     count = 0
     while os.path.isfile(path + name + str(count) + suf):
-        print(count)
+        #print(count)
         count += 1
     print("exiting while at Count = " + str(count))
-    f = open(path + name + str(count) + suf, x)
+    f = open(path + name + str(count) + suf, "w+")
     print("created new file in results: " + name + str(count) + suf)
-    f.write(str(x) + " " + str(l))
+    for x in range (0,len(rewards)):
+        f.write(str(x) + "," + str(rewards[x])+"\n")
     f.close()
     print("done writing to file")
 
@@ -233,7 +236,7 @@ if __name__ == '__main__':
     # Action = which buttons are pressed
     print('Availible Buttons: ',game.get_available_buttons())
     print('Availible Actions: ',actions_num)
-    writeToTxt("a", "b")
+    #writeToFile("a", "b")
   
     for perm in it.product([False, True], repeat=actions_num):
         actions.append(list(perm))
@@ -281,8 +284,9 @@ if __name__ == '__main__':
                   "min: %.1f," % train_scores.min(), "max: %.1f," % train_scores.max())
             #TODO Tim instead of printing the train_scores of x it will write to a txt file
             #make function
-            for x in range(0,len(train_scores)):
-                writeToTXT(x, train_scores) #writeToTXT is currently an empty definition
+            for s in train_scores:
+                rewards_per_episode.append(s)
+            #writeToFile(train_scores) 
 
             print("\nTesting...")
             test_episode = []
@@ -309,6 +313,7 @@ if __name__ == '__main__':
             print("Total elapsed time: %.2f minutes" % ((time() - time_start) / 60.0))
 
     game.close()
+    writeToFile(rewards_per_episode)
     print("======================================")
     print("Training finished. It's time to watch!")
 
