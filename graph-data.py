@@ -2,7 +2,6 @@ from matplotlib import pyplot as plt
 
 
 
-
 def plotData(listX, listY):
     plt.plot(listX, listY)
     plt.title("Reward Per Episode")
@@ -10,13 +9,16 @@ def plotData(listX, listY):
     plt.ylabel("Reward")
     plt.show()
 def loadInData():
-    print("This function will laod in the data in each result.txt file and make a list of x coordinates and y coordinates")
     x = []
     y = []
+    file = open(r"results/results1.txt", "r")
+    for line in file:
+        seperator = line.split(",")
+        x.append(float(seperator[0]))
+        y.append(float(seperator[1]))
     return x,y
 
 
 if __name__ == '__main__':
-    x = [0, 1, 2]
-    y = [4, 8, 2]
+    x, y = loadInData()
     plotData(x,y)
