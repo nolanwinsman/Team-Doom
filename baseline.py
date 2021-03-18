@@ -22,11 +22,13 @@ import os.path
 from torchvision import datasets, transforms
 from torch.autograd import Variable
 from tqdm import trange
+import argparse
+
 
 # Q-learning settings
 learning_rate = 0.00025
 discount_factor = 0.99
-epochs = 25
+epochs = 1 #set to one for testing, should be a lot higher for actual learning
 learning_steps_per_epoch = 2000
 replay_memory_size = 10000
 
@@ -50,9 +52,9 @@ rewards_per_episode = []
 avg_reward_per_episode = [] #TODO store the average score per episode
 
 # Configuration file path
-config_file_path = "scenarios/nolan_made.cfg"
+# config_file_path = "scenarios/nolan_made.cfg"
+config_file_path = ""
 # config_file_path = "../../scenarios/rocket_basic.cfg"
-# config_file_path = "../../scenarios/basic.cfg"
 
 # Converts and down-samples the input image
 def preprocess(img):
@@ -107,19 +109,66 @@ class Net(nn.Module):
         return self.fc2(x)
 
 criterion = nn.MSELoss()
+#Funtion that returns the proper name of the scenarios in the scenarios directory
+#Should probably use cases
+def findScenario(s, p):
+    ext = '.cfg'
+    if (s == 'basic'):
+        return p+'basic'+ext
+    elif (s == 'cig'): 
+        return p+'cig'+ext
+    elif (s == 'deadly' or 'deadly_corridor'):
+        return p+'deadly_corridor'+ext
+    elif (s == 'deathmatch'):
+        return p+'deathmatch'+ext
+    elif (s == 'defend_center' or s == 'defend_the_center'):
+        return p+'defend_the_center'+ext
+    elif (s == 'defend_line' or s == 'defend_the_line'):
+        return p+'defend_the_line'+ext
+    elif (s == 'health_gathering'):
+        return p+'health_gathering'+ext
+    elif (s == 'health_gathering_supreme'):
+        return p+'health_gathering_supreme'+ext
+    elif (s == 'learning'):
+        return p+'learning'+ext
+    elif (s == 'multi'):
+        return p+'multi'+ext
+    elif (s == 'multi_duel'):
+        return p+'multi_duel'+ext
+    elif (s == 'my_way_home' or s == 'home'):
+        return p+'my_way_home'+ext
+    elif (s == 'oblige'):
+        return p+'oblige'+ext
+    elif (s == 'predict_position'):
+        return p+'predict_position'+ext
+    elif (s == 'rocket_basic'):
+        return p+'rocket_basic'+ext
+    elif (s == 'simpler_basic'):
+        return p+'simpler_basic'+ext
+    elif (s == 'take_cover'):
+        return p+'take_cover'+ext
+    elif (s == 'test'):
+        return p+'test'+ext
+    else:
+        print('Scenario '+s+' Not Found, Loading basic.cfg')
+        return p+'basic'+ext
 
-#TODO write function
-#takes int x and list l, should write to txt a line "x, l[x]" ignore quotes
-def writeToFile(rewards):
+def parseData():
+    parser = argparse.ArgumentParser(description = "Something")
+    parser.add_argument('-scenario','-s', type=str, default = 'basic', help='Doom Scenario')
+    args = parser.parse_args()
+    scenario = findScenario(args.scenario, r"scenarios/")
+    s = args.scenario
+    return s,scenario
+
+def writeToFile(rewards,s):
     path = "results/"
     name = "results"
     suf = ".txt"
-    count = 0
-    while os.path.isfile(path + name + str(count) + suf):
-        #print(count)
-        count += 1
+    files = os.listdir(path)
+    count = len(files) -1
     print("exiting while at Count = " + str(count))
-    f = open(path + name + str(count) + suf, "w+")
+    f = open(path + name + str(count)+ '_'+ s + suf, "w+")
     print("created new file in results: " + name + str(count) + suf)
     for x in range (0,len(rewards)):
         f.write(str(x) + "," + str(rewards[x])+"\n")
@@ -231,13 +280,14 @@ def initialize_vizdoom(config_file_path):
 
 if __name__ == '__main__':
     # Create Doom instance
-    game = initialize_vizdoom(config_file_path)
+    #game = initialize_vizdoom(config_file_path)
+    scene, config_file_path = parseData()
+    game = initialize_vizdoom(config_file_path) #gets the scenario from parsing -s
     actions_num = game.get_available_buttons_size()
     actions = []
     # Action = which buttons are pressed
     print('Availible Buttons: ',game.get_available_buttons())
     print('Availible Actions: ',actions_num)
-    #writeToFile("a", "b")
   
     for perm in it.product([False, True], repeat=actions_num):
         actions.append(list(perm))
@@ -287,7 +337,6 @@ if __name__ == '__main__':
             #adds the data from train_scores into global list
             for s in train_scores:
                 rewards_per_episode.append(s)
-            #writeToFile(train_scores) 
 
             print("\nTesting...")
             test_episode = []
@@ -314,7 +363,7 @@ if __name__ == '__main__':
             print("Total elapsed time: %.2f minutes" % ((time() - time_start) / 60.0))
 
     game.close()
-    writeToFile(rewards_per_episode)
+    writeToFile(rewards_per_episode, scene)
     print("======================================")
     print("Training finished. It's time to watch!")
 
