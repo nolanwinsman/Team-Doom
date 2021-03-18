@@ -43,10 +43,13 @@ frame_repeat = 12
 resolution = (30, 45)
 episodes_to_watch = 10
 
-model_savefile = "./model-doom.pth"
+model_savefile = "./model-doom.pth" #make github ignore pth files
 save_model = True
 load_model = False
 skip_learning = False
+
+#
+
 
 rewards_per_episode = []
 avg_reward_per_episode = [] #TODO store the average score per episode
