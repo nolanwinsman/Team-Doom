@@ -28,7 +28,7 @@ import argparse
 # Q-learning settings
 learning_rate = 0.00025
 discount_factor = 0.99
-epochs = 1 #set to one for testing, should be a lot higher for actual learning
+epochs = 20 #set to one for testing, should be a lot higher for actual learning
 learning_steps_per_epoch = 2000
 replay_memory_size = 10000
 
@@ -168,7 +168,7 @@ def writeToFile(rewards,s):
     files = os.listdir(path)
     count = len(files) -1
     print("exiting while at Count = " + str(count))
-    f = open(path + name + str(count)+ '_'+ s + suf, "w+")
+    f = open(path + name + str(count)+ '_'+ s +"_"+ str(epochs) + "Epochs" + suf, "w+")
     print("created new file in results: " + name + str(count) + suf)
     for x in range (0,len(rewards)):
         f.write(str(x) + "," + str(rewards[x])+"\n")
