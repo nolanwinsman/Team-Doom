@@ -11,7 +11,7 @@ def plotData(listX, listY, title):
 def loadInData(n):
     x = []
     y = []
-    file = open("results/results"+ str(n) + ".txt", "r")
+    file = open("results/"+n+".txt", "r")
     for line in file:
         seperator = line.split(",")
         x.append(float(seperator[0]))
@@ -20,6 +20,6 @@ def loadInData(n):
 
 
 if __name__ == '__main__':
-    n = input("Which number results file do you want? ")
-    x, y = loadInData(n)
+    name = input("Filename? ")
+    x, y = loadInData(name)
     plotData(x,y, "Walk Straight")
