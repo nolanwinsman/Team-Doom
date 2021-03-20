@@ -1,0 +1,36 @@
+
+#class common parameters
+#put all parameters in there
+#import module to baseline.py
+
+class default_data:
+    def __init__(self):
+        # Game scenario 
+        self.scenario = 'nolan_made'
+        self.config_file_path = "scenarios/"+self.scenario+".cfg"
+        
+        # Q-learning settings
+        self.epochs = 1
+        self.learning_rate = 0.00025
+        self.discount_factor = 0.99
+        self.learning_steps_per_epoch = 2000
+        self.replay_memory_size = 10000
+
+        # NN learning settings
+        self.batch_size = 64
+
+        # Training regime
+        self.test_episodes_per_epoch = 100
+
+        # Other parameters
+        self.frame_repeat = 12
+        self.resolution = (30, 45)
+        self.episodes_to_watch = 10
+
+        self.save_model = True
+        self.load_model = False
+        self.skip_learning = False
+        self.model_savefile = "./model-doom.pth"
+        self.model_loadfile = "./model-doom.pth"
+
+    

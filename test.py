@@ -5,6 +5,7 @@ import random
 import time
 import itertools as it
 import argparse
+from default_data import *
 
 #Funtion that returns the proper name of the scenarios in the scenarios directory
 #Should probably use cases
@@ -46,17 +47,22 @@ def findScenario(s, p):
         return p+'take_cover'+ext
     elif (s == 'test'):
         return p+'test'+ext
+    elif (s == 'nolan_made'):
+        print("DONKEY BALLS")
+        return p+'nolan_made'+ext
     else:
         print('Scenario '+s+' Not Found, Loading basic.cfg')
         return p+'basic'+ext
 
-
 game = DoomGame()
-
+defaults = hodl_data()
+epochs = defaults.epochs
+print(epochs)
 parser = argparse.ArgumentParser(description = "Something")
 parser.add_argument('-scenario','-s', type=str, default = 'basic', help='Doom Scenario')
 args = parser.parse_args()
 scenario = findScenario(args.scenario, r"scenarios/")
+scenario = "scenarios/nolan_made.cfg"
 
 #game.load_config("/vizdoom/scenarios/test.cfg")
 game.load_config(scenario)
