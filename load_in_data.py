@@ -6,11 +6,11 @@
 class default_data:
     def __init__(self):
         # Game scenario 
-        self.scenario = 'nolan_made'
+        self.scenario = 'defend_the_center'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
-        self.epochs = 1
+        self.epochs = 20
         self.learning_rate = 0.00025
         self.discount_factor = 0.99
         self.learning_steps_per_epoch = 2000
@@ -30,6 +30,7 @@ class default_data:
         self.save_model = True
         self.load_model = False
         self.skip_learning = False
+        self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"
         self.model_loadfile = "./model-doom.pth"
 

@@ -28,7 +28,7 @@ from load_in_data import default_data
 default = default_data()
 # Q-learning settings
 learning_rate = default.learning_rate
-discount_factor = default.learning_rate
+discount_factor = default.discount_factor
 epochs = default.epochs
 learning_steps_per_epoch = default.learning_steps_per_epoch
 replay_memory_size = default.replay_memory_size
@@ -112,14 +112,13 @@ class Net(nn.Module):
 
 criterion = nn.MSELoss()
 
-def writeToFile(rewards,s):
+def writeToFile(rewards):
     path = "results/"
     name = "results"
     suf = ".txt"
     files = os.listdir(path)
     count = len(files) -1
-    print("exiting while at Count = " + str(count))
-    f = open(path + name + str(count)+ '_'+ s +"_"+ str(epochs) + "Epochs" + suf, "w+")
+    f = open(path + name + str(count)+ '_'+ default.scenario +"_"+ str(epochs) + "Epochs" + suf, "w+")
     print("created new file in results: " + name + str(count) + suf)
     for x in range (0,len(rewards)):
         f.write(str(x) + "," + str(rewards[x])+"\n")
@@ -307,12 +306,12 @@ if __name__ == '__main__':
             print("Total elapsed time: %.2f minutes" % ((time() - time_start) / 60.0))
 
     game.close()
-    writeToFile(rewards_per_episode, default.scenario)
+    writeToFile(rewards_per_episode)
     print("======================================")
     print("Training finished. It's time to watch!")
 
     # Reinitialize the game with window visible
-    game.set_window_visible(True)
+    game.set_window_visible(default.game_window_visible)
     game.set_mode(Mode.ASYNC_PLAYER)
     game.init()
 

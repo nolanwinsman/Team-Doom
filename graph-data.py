@@ -22,4 +22,4 @@ def loadInData(n):
 if __name__ == '__main__':
     name = input("Filename? ")
     x, y = loadInData(name)
-    plotData(x,y, "Walk Straight")
+    plotData(x,y, "Defend The Center")
