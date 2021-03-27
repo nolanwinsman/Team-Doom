@@ -6,11 +6,11 @@
 class default_data:
     def __init__(self):
         # Game scenario 
-        self.scenario = 'defend_the_center'
+        self.scenario = 'basic'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
-        self.epochs = 20
+        self.epochs = 1
         self.learning_rate = 0.00025
         self.discount_factor = 0.99
         self.learning_steps_per_epoch = 2000

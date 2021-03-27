@@ -51,6 +51,8 @@ skip_learning = default.skip_learning
 skip_evaluation = default.skip_evaluation
 
 folder = False
+model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_index_")
+model_savefile = ("model_"+default.scenario+"_epoch_")
 
 rewards_per_episode = []
 avg_reward_per_episode = [] #TODO store the average score per episode
@@ -115,9 +117,14 @@ class Net(nn.Module):
 criterion = nn.MSELoss()
 
 def createPTH(epoch):
-    print("stuff")
-    file = ()
-
+    directory = "models/"+model_folder
+    name = model_savefile+str(epoch)+".pth"
+    print("Saving Model: "+name)
+    os.chdir(directory)
+    torch.save(model, name)
+    os.chdir("..")
+    os.chdir("..")
+    print("Directory: "+os.getcwd())
 
 def writeToFile(rewards):
     path = "results/"
@@ -278,9 +285,10 @@ if __name__ == '__main__':
                     game.new_episode()
                     train_episodes_finished += 1
             if epoch % iteration == 0:
-                if not folder:
-                    
-                    os.mkdir(model_folder)
+                if epoch == 0:
+                    files = os.listdir("models/")
+                    model_folder = model_folder+str(len(files))
+                    os.mkdir("models/"+model_folder)
                 createPTH(epoch)
 
             print("%d training episodes played." % train_episodes_finished)
