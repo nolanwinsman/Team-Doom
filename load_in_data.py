@@ -30,6 +30,7 @@ class default_data:
         self.save_model = True
         self.load_model = False
         self.skip_learning = False
+        self.skip_evaluation = True
         self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"
         self.model_loadfile = "./model-doom.pth"

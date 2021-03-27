@@ -48,7 +48,9 @@ model_savefile = default.model_savefile
 save_model = default.save_model
 load_model = default.load_model
 skip_learning = default.skip_learning
+skip_evaluation = default.skip_evaluation
 
+folder = False
 
 rewards_per_episode = []
 avg_reward_per_episode = [] #TODO store the average score per episode
@@ -111,6 +113,11 @@ class Net(nn.Module):
         return self.fc2(x)
 
 criterion = nn.MSELoss()
+
+def createPTH(epoch):
+    print("stuff")
+    file = ()
+
 
 def writeToFile(rewards):
     path = "results/"
@@ -255,6 +262,7 @@ if __name__ == '__main__':
     print("Starting the training!")
     time_start = time()
     if not skip_learning:
+        iteration = epochs/4
         for epoch in range(epochs):
             print("\nEpoch %d\n-------" % (epoch + 1))
             train_episodes_finished = 0
@@ -269,6 +277,11 @@ if __name__ == '__main__':
                     train_scores.append(score)
                     game.new_episode()
                     train_episodes_finished += 1
+            if epoch % iteration == 0:
+                if not folder:
+                    
+                    os.mkdir(model_folder)
+                createPTH(epoch)
 
             print("%d training episodes played." % train_episodes_finished)
 
@@ -310,24 +323,25 @@ if __name__ == '__main__':
     print("======================================")
     print("Training finished. It's time to watch!")
 
-    # Reinitialize the game with window visible
-    game.set_window_visible(default.game_window_visible)
-    game.set_mode(Mode.ASYNC_PLAYER)
-    game.init()
+    if not skip_evaluation:
+        # Reinitialize the game with window visible
+        game.set_window_visible(default.game_window_visible)
+        game.set_mode(Mode.ASYNC_PLAYER)
+        game.init()
 
-    for _ in range(episodes_to_watch):
-        game.new_episode()
-        while not game.is_episode_finished():
-            state = preprocess(game.get_state().screen_buffer)
-            state = state.reshape([1, 1, resolution[0], resolution[1]])
-            best_action_index = get_best_action(state)
+        for _ in range(episodes_to_watch):
+            game.new_episode()
+            while not game.is_episode_finished():
+                state = preprocess(game.get_state().screen_buffer)
+                state = state.reshape([1, 1, resolution[0], resolution[1]])
+                best_action_index = get_best_action(state)
 
-            # Instead of make_action(a, frame_repeat) in order to make the animation smooth
-            game.set_action(actions[best_action_index])
-            for _ in range(frame_repeat):
-                game.advance_action()
+                # Instead of make_action(a, frame_repeat) in order to make the animation smooth
+                game.set_action(actions[best_action_index])
+                for _ in range(frame_repeat):
+                    game.advance_action()
 
-        # Sleep between episodes
-        sleep(1.0)
-        score = game.get_total_reward()
-        print("Total score: ", score)
+            # Sleep between episodes
+            sleep(1.0)
+            score = game.get_total_reward()
+            print("Total score: ", score)
