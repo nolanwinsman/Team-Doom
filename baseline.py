@@ -270,8 +270,11 @@ if __name__ == '__main__':
     time_start = time()
     if not skip_learning:
         iteration = epochs/4
-        for epoch in range(epochs):
-            print("\nEpoch %d\n-------" % (epoch + 1))
+        files = os.listdir("models/")
+        model_folder = model_folder+str(len(files))
+        os.mkdir("models/"+model_folder)
+        for epoch in range(1, epochs+1):
+            print("\nEpoch %d\n-------" % (epoch))
             train_episodes_finished = 0
             train_scores = []
 
@@ -284,13 +287,7 @@ if __name__ == '__main__':
                     train_scores.append(score)
                     game.new_episode()
                     train_episodes_finished += 1
-            if epoch % iteration == 0:
-                if epoch == 0:
-                    files = os.listdir("models/")
-                    model_folder = model_folder+str(len(files))
-                    os.mkdir("models/"+model_folder)
-                createPTH(epoch)
-
+            
             print("%d training episodes played." % train_episodes_finished)
 
             train_scores = np.array(train_scores)
@@ -321,11 +318,13 @@ if __name__ == '__main__':
                 test_scores.mean(), test_scores.std()), "min: %.1f" % test_scores.min(),
                   "max: %.1f" % test_scores.max())
 
+            if epoch % iteration == 0:
+                createPTH(epoch)
+
             print("Saving the network weigths to:", model_savefile)
-            torch.save(model, model_savefile)
+            #torch.save(model, model_savefile)
 
             print("Total elapsed time: %.2f minutes" % ((time() - time_start) / 60.0))
-
     game.close()
     writeToFile(rewards_per_episode)
     print("======================================")
