@@ -6,7 +6,7 @@
 class default_data:
     def __init__(self):
         #whoever is running this code make sure you change the name to your first name
-        self.user = "Nolan"
+        self.user = "Ethan"
 
         # Game scenario 
         self.scenario = 'defend_the_line'
