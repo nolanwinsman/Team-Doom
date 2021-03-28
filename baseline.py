@@ -61,7 +61,7 @@ avg_reward_per_episode = [] #TODO store the average score per episode
 # config_file_path = "scenarios/nolan_made.cfg"
 config_file_path = default.config_file_path
 # config_file_path = "../../scenarios/rocket_basic.cfg"
-
+#Nolan did stuff
 # Converts and down-samples the input image
 def preprocess(img):
     img = skimage.transform.resize(img, resolution)
