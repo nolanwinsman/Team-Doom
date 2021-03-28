@@ -12,7 +12,6 @@ import itertools as it
 from random import sample, randint, random
 from time import time, sleep
 import numpy as np
-import numpy as np
 import skimage.color, skimage.transform
 import torch
 import torch.nn as nn
@@ -23,6 +22,7 @@ from torchvision import datasets, transforms
 from torch.autograd import Variable
 from tqdm import trange
 import argparse
+
 from load_in_data import default_data
 
 default = default_data()
@@ -118,7 +118,7 @@ criterion = nn.MSELoss()
 
 def createPTH(epoch):
     directory = "models/"+model_folder
-    name = model_savefile+str(epoch)+".pth"
+    name = model_savefile+str(epoch)+"_"+default.user+".pth"
     print("Saving Model: "+name)
     os.chdir(directory)
     torch.save(model, name)
@@ -132,7 +132,7 @@ def writeToFile(rewards):
     suf = ".txt"
     files = os.listdir(path)
     count = len(files) -1
-    f = open(path + name + str(count)+ '_'+ default.scenario +"_"+ str(epochs) + "Epochs" + suf, "w+")
+    f = open(path + name + str(count)+ '_'+ default.scenario +"_"+ str(epochs) + "Epochs_"+default.user + suf, "w+")
     print("created new file in results: " + name + str(count) + suf)
     for x in range (0,len(rewards)):
         f.write(str(x) + "," + str(rewards[x])+"\n")
@@ -269,7 +269,7 @@ if __name__ == '__main__':
     print("Starting the training!")
     time_start = time()
     if not skip_learning:
-        iteration = epochs/4
+        iterations = np.floor(epochs/4)
         files = os.listdir("models/")
         model_folder = model_folder+str(len(files))
         os.mkdir("models/"+model_folder)
@@ -318,7 +318,7 @@ if __name__ == '__main__':
                 test_scores.mean(), test_scores.std()), "min: %.1f" % test_scores.min(),
                   "max: %.1f" % test_scores.max())
 
-            if epoch % iteration == 0:
+            if epoch % iterations == 0 or epoch == 1 or epoch == epochs:
                 createPTH(epoch)
 
             print("Saving the network weigths to:", model_savefile)
