@@ -118,7 +118,7 @@ criterion = nn.MSELoss()
 
 def createPTH(epoch):
     directory = "models/"+model_folder
-    name = model_savefile+str(epoch)+"_"+default.user+".pth"
+    name = model_savefile+str(epoch)+".pth"
     print("Saving Model: "+name)
     os.chdir(directory)
     torch.save(model, name)
@@ -271,7 +271,7 @@ if __name__ == '__main__':
     if not skip_learning:
         iterations = np.floor(epochs/4)
         files = os.listdir("models/")
-        model_folder = model_folder+str(len(files))
+        model_folder = model_folder+str(len(files))+'_'+default.user
         os.mkdir("models/"+model_folder)
         for epoch in range(1, epochs+1):
             print("\nEpoch %d\n-------" % (epoch))

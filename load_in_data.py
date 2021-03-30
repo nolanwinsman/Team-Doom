@@ -9,11 +9,11 @@ class default_data:
         self.user = "Ethan"
 
         # Game scenario 
-        self.scenario = 'defend_the_line'
+        self.scenario = 'health_gathering_supreme'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
-        self.epochs = 1
+        self.epochs = 20
         self.learning_rate = 0.00025
         self.discount_factor = 0.99
         self.learning_steps_per_epoch = 2000
