@@ -30,12 +30,13 @@ class default_data:
         self.resolution = (30, 45)
         self.episodes_to_watch = 10
 
+        self.numEvaluations = 5
         self.save_model = True
-        self.load_model = False
-        self.skip_learning = False
-        self.skip_evaluation = True #added line
+        self.load_model = True
+        self.skip_learning = True
+        self.skip_evaluation = False #added line
         self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"
-        self.model_loadfile = "./model-doom.pth"
+        self.model_loadfile = "./model-doom.pth" #set to a model pth file
 
     
