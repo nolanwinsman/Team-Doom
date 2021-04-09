@@ -6,10 +6,10 @@
 class default_data:
     def __init__(self):
         #whoever is running this code make sure you change the name to your first name
-        self.user = "Nolan"
+        self.user = "Tim"
 
         # Game scenario 
-        self.scenario = 'defend_the_center'
+        self.scenario = 'health_gathering_supreme'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
@@ -37,6 +37,6 @@ class default_data:
         self.skip_evaluation = False #added line
         self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"
-        self.model_loadfile = "./model-doom.pth" #set to a model pth file
+        self.model_loadfile = "./models/model_basic_epochs_20_index_1/model_basic_epoch_0.pth" #set to a model pth file
 
     

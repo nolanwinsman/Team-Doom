@@ -47,8 +47,10 @@ episodes_to_watch = default.episodes_to_watch
 model_savefile = default.model_savefile
 save_model = default.save_model
 load_model = default.load_model
+model_loadfile = default.model_loadfile
 skip_learning = default.skip_learning
 skip_evaluation = default.skip_evaluation
+eval_scores = []
 
 folder = False
 model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_index_")
@@ -136,6 +138,7 @@ def writeToFile(rewards):
     print("created new file in results: " + name + str(count) + suf)
     for x in range (0,len(rewards)):
         f.write(str(x) + "," + str(rewards[x])+"\n")
+    
     f.close()
     print("done writing to file")
 
@@ -253,8 +256,8 @@ if __name__ == '__main__':
     memory = ReplayMemory(capacity=replay_memory_size)
 
     if load_model:
-        print("Loading model from: ", model_savefile)
-        model = torch.load(model_savefile)
+        print("Loading model from: ", model_loadfile)
+        model = torch.load(model_loadfile)
     else:
 	    print("Model not loaded")
 	    model = Net(len(actions))
@@ -335,7 +338,7 @@ if __name__ == '__main__':
         game.set_window_visible(default.game_window_visible)
         game.set_mode(Mode.ASYNC_PLAYER)
         game.init()
-
+        #Loop 5 times
         for _ in range(episodes_to_watch):
             game.new_episode()
             while not game.is_episode_finished():
@@ -352,3 +355,7 @@ if __name__ == '__main__':
             sleep(1.0)
             score = game.get_total_reward()
             print("Total score: ", score)
+            eval_scores.append(score)
+
+        writeToFile(eval_scores)
+        
