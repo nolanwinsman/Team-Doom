@@ -9,7 +9,7 @@ class default_data:
         self.user = "Nolan"
 
         # Game scenario 
-        self.scenario = 'basic'
+        self.scenario = 'my_way_home'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
@@ -33,8 +33,8 @@ class default_data:
         self.numEvaluations = 5
         self.save_model = True
         self.load_model = False
-        self.skip_learning = True
-        self.skip_evaluation = False #added line
+        self.skip_learning = False
+        self.skip_evaluation = True #added line
         self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"
         self.eval_epoch = [5, 10, 15, 20]

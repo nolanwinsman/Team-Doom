@@ -139,14 +139,12 @@ def writeToFile(rewards, tempname):
     if tempname == '':
         filename = path + name + str(count)+ '_'+ default.scenario +"_"+ str(epochs) + "Epochs_"+default.user + suf
     else:
-        filename = path + tempname + suf 
+        filename = path + default.user +'_'+ tempname + suf 
     f = open(filename, "w+")
-    print("created new file in results: " + name + str(count) + suf)
+    print("created new file in results: " + filename)
     for x in range (0,len(rewards)):
         f.write(str(x) + "," + str(rewards[x])+"\n")
-    
     f.close()
-    print("done writing to file")
 
 def learn(s1, target_q):
     s1 = torch.from_numpy(s1)
@@ -334,7 +332,7 @@ if __name__ == '__main__':
             #torch.save(model, model_savefile)
 
             print("Total elapsed time: %.2f minutes" % ((time() - time_start) / 60.0))
-        writeToFile(rewards_per_episode, '')
+        #writeToFile(rewards_per_episode, '')
     game.close()
     print("======================================")
     print("Training finished. It's time to watch!")
@@ -348,7 +346,7 @@ if __name__ == '__main__':
         for epoch in eval_epoch:
             model = torch.load(model_abs_path + str(epoch) + '.pth')
             eval_scores = []
-            for x in range(1):
+            for x in range(5):
                 for _ in range(episodes_to_watch):
                     game.new_episode()
                     while not game.is_episode_finished():

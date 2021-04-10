@@ -28,13 +28,13 @@ def loadInData(n):
 
 
 if __name__ == '__main__':
-    name = input("Filename? ")
-    pthFiles = ["model_basic_epoch_5", "model_basic_epoch_10", "model_basic_epoch_15", "model_basic_epoch_20"]
+    #name = input("Filename? ")
+    pthFiles = ["Nolan_model_basic_epoch_5", "Nolan_model_basic_epoch_10", "Nolan_model_basic_epoch_15", "Nolan_model_basic_epoch_20"]
     x = []
     y = []
     for n in pthFiles:
         x.append(averageOfList(n))
-        y.append(len(x))
+        y.append(len(x)+1)
     #plotData(x,y, "Test")
-    plt.bar(y,x)
+    plt.bar(y, x)
     plt.show()
