@@ -31,12 +31,18 @@ class default_data:
         self.episodes_to_watch = 10
 
         self.numEvaluations = 5
+        
+        # Booleans on whether or not the program learns and evaluates
         self.save_model = True
         self.load_model = False
         self.skip_learning = False
-        self.skip_evaluation = True #added line
+        self.skip_evaluation = True
         self.game_window_visible = True
+
+
         self.model_savefile = "./model-doom.pth"
+
+        # Look at the PTH files you are trying to evaluate
         self.eval_epoch = [5, 10, 15, 20]
         self.model_loadfile = "model_basic_epoch_"
         self.model_abs_path = "./models/model_basic_epochs_20_index_4/"+self.model_loadfile

@@ -57,6 +57,8 @@ skip_evaluation = default.skip_evaluation
 folder = False
 model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_index_")
 model_savefile = ("model_"+default.scenario+"_epoch_")
+result_folder = ("result_"+default.scenario+"_epochs_"+str(eval_epoch[-1])+"_index_")
+
 
 rewards_per_episode = []
 avg_reward_per_episode = [] #TODO store the average score per episode
@@ -130,8 +132,13 @@ def createPTH(epoch):
     os.chdir("..")
     print("Directory: "+os.getcwd())
 
-def writeToFile(rewards, tempname):
-    path = "results/"
+def createRes(epochs):
+    directory = "results/"+result_folder
+    name = model_savefile+str(epoch)+".pth"
+
+
+def writeToFile(rewards, tempname, path):
+    #path = "results/"
     suf = ".txt"
     files = os.listdir(path)
     count = len(files) -1
@@ -332,7 +339,7 @@ if __name__ == '__main__':
             #torch.save(model, model_savefile)
 
             print("Total elapsed time: %.2f minutes" % ((time() - time_start) / 60.0))
-        #writeToFile(rewards_per_episode, '')
+        #writeToFile(rewards_per_episode, '', "results/")
     game.close()
     print("======================================")
     print("Training finished. It's time to watch!")
@@ -342,11 +349,11 @@ if __name__ == '__main__':
         game.set_window_visible(default.game_window_visible)
         game.set_mode(Mode.ASYNC_PLAYER)
         game.init()
-        #Loop 5 times
+        path = "results/" +  
         for epoch in eval_epoch:
             model = torch.load(model_abs_path + str(epoch) + '.pth')
             eval_scores = []
-            for x in range(5):
+            for x in range(default.numEvaluations):
                 for _ in range(episodes_to_watch):
                     game.new_episode()
                     while not game.is_episode_finished():
