@@ -47,10 +47,12 @@ episodes_to_watch = default.episodes_to_watch
 model_savefile = default.model_savefile
 save_model = default.save_model
 load_model = default.load_model
+eval_epoch = default.eval_epoch
 model_loadfile = default.model_loadfile
+model_abs_path = default.model_abs_path
 skip_learning = default.skip_learning
 skip_evaluation = default.skip_evaluation
-eval_scores = []
+
 
 folder = False
 model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_index_")
@@ -128,13 +130,17 @@ def createPTH(epoch):
     os.chdir("..")
     print("Directory: "+os.getcwd())
 
-def writeToFile(rewards):
+def writeToFile(rewards, tempname):
     path = "results/"
-    name = "results"
     suf = ".txt"
     files = os.listdir(path)
     count = len(files) -1
-    f = open(path + name + str(count)+ '_'+ default.scenario +"_"+ str(epochs) + "Epochs_"+default.user + suf, "w+")
+    name = "results"
+    if tempname == '':
+        filename = path + name + str(count)+ '_'+ default.scenario +"_"+ str(epochs) + "Epochs_"+default.user + suf
+    else:
+        filename = path + tempname + suf 
+    f = open(filename, "w+")
     print("created new file in results: " + name + str(count) + suf)
     for x in range (0,len(rewards)):
         f.write(str(x) + "," + str(rewards[x])+"\n")
@@ -257,7 +263,7 @@ if __name__ == '__main__':
 
     if load_model:
         print("Loading model from: ", model_loadfile)
-        model = torch.load(model_loadfile)
+        model = torch.load(model_abs_path)
     else:
 	    print("Model not loaded")
 	    model = Net(len(actions))
@@ -328,8 +334,8 @@ if __name__ == '__main__':
             #torch.save(model, model_savefile)
 
             print("Total elapsed time: %.2f minutes" % ((time() - time_start) / 60.0))
+        writeToFile(rewards_per_episode, '')
     game.close()
-    writeToFile(rewards_per_episode)
     print("======================================")
     print("Training finished. It's time to watch!")
 
@@ -339,23 +345,26 @@ if __name__ == '__main__':
         game.set_mode(Mode.ASYNC_PLAYER)
         game.init()
         #Loop 5 times
-        for _ in range(episodes_to_watch):
-            game.new_episode()
-            while not game.is_episode_finished():
-                state = preprocess(game.get_state().screen_buffer)
-                state = state.reshape([1, 1, resolution[0], resolution[1]])
-                best_action_index = get_best_action(state)
+        for epoch in eval_epoch:
+            model = torch.load(model_abs_path + str(epoch) + '.pth')
+            eval_scores = []
+            for x in range(1):
+                for _ in range(episodes_to_watch):
+                    game.new_episode()
+                    while not game.is_episode_finished():
+                        state = preprocess(game.get_state().screen_buffer)
+                        state = state.reshape([1, 1, resolution[0], resolution[1]])
+                        best_action_index = get_best_action(state)
 
-                # Instead of make_action(a, frame_repeat) in order to make the animation smooth
-                game.set_action(actions[best_action_index])
-                for _ in range(frame_repeat):
-                    game.advance_action()
+                        # Instead of make_action(a, frame_repeat) in order to make the animation smooth
+                        game.set_action(actions[best_action_index])
+                        for _ in range(frame_repeat):
+                            game.advance_action()
 
-            # Sleep between episodes
-            sleep(1.0)
-            score = game.get_total_reward()
-            print("Total score: ", score)
-            eval_scores.append(score)
-
-        writeToFile(eval_scores)
+                    # Sleep between episodes
+                    sleep(1.0)
+                    score = game.get_total_reward()
+                    print("Total score: ", score)
+                    eval_scores.append(score)
+            writeToFile(eval_scores, model_loadfile + str(epoch))
         
