@@ -1,10 +1,11 @@
 from matplotlib import pyplot as plt
 import numpy as np
-#abs_path = "./models/model_basic_epochs_20_index_1/"
+from load_in_data import default_data
+
 
 def averageOfList(filename):
     l = []
-    file = open("results/"+filename+".txt", "r")
+    file = open(filename+".txt", "r")
     for line in file:
         seperator = line.split(",")
         l.append(float(seperator[1]))
@@ -19,7 +20,7 @@ def plotData(listX, listY, title):
 def loadInData(n):
     x = []
     y = []
-    file = open("results/"+n+".txt", "r")
+    file = open(n+".txt", "r")
     for line in file:
         seperator = line.split(",")
         x.append(float(seperator[0]))
@@ -29,12 +30,11 @@ def loadInData(n):
 
 if __name__ == '__main__':
     #name = input("Filename? ")
-    pthFiles = ["Nolan_model_basic_epoch_5", "Nolan_model_basic_epoch_10", "Nolan_model_basic_epoch_15", "Nolan_model_basic_epoch_20"]
+    path = "results/result_defend_the_center_epochs_20_index_0/"
+    filename = "Nolan_model_defend_the_center_epoch_"
+    default = default_data()
     x = []
-    y = []
-    for n in pthFiles:
-        x.append(averageOfList(n))
-        y.append(len(x)+1)
-    #plotData(x,y, "Test")
-    plt.bar(y, x)
-    plt.show()
+    for n in default.eval_epoch:
+        x.append(averageOfList(path + filename + str(n)))
+    print(default.eval_epoch)
+    plotData(default.eval_epoch, x, "Test")

@@ -9,7 +9,7 @@ class default_data:
         self.user = "Nolan"
 
         # Game scenario 
-        self.scenario = 'my_way_home'
+        self.scenario = 'nolan_made'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
@@ -35,17 +35,17 @@ class default_data:
         # Booleans on whether or not the program learns and evaluates
         self.save_model = True
         self.load_model = False
-        self.skip_learning = False
-        self.skip_evaluation = True
+        self.skip_learning = True
+        self.skip_evaluation = False
         self.game_window_visible = True
 
 
         self.model_savefile = "./model-doom.pth"
 
         # Look at the PTH files you are trying to evaluate
-        self.eval_epoch = [5, 10, 15, 20]
-        self.model_loadfile = "model_basic_epoch_"
-        self.model_abs_path = "./models/model_basic_epochs_20_index_4/"+self.model_loadfile
+        self.eval_epoch = [1, 5, 10, 15, 20]
+        self.model_loadfile = "model_nolan_made_epoch_"
+        self.model_abs_path = "./models/model_nolan_made_epochs_20_index_17_Nolan/"+self.model_loadfile
         
 
     

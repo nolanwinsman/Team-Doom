@@ -57,7 +57,7 @@ skip_evaluation = default.skip_evaluation
 folder = False
 model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_index_")
 model_savefile = ("model_"+default.scenario+"_epoch_")
-result_folder = ("result_"+default.scenario+"_epochs_"+str(eval_epoch[-1])+"_index_")
+result_folder = ("result_"+default.scenario+"_epochs_"+str(eval_epoch[-1]))
 
 
 rewards_per_episode = []
@@ -132,11 +132,12 @@ def createPTH(epoch):
     os.chdir("..")
     print("Directory: "+os.getcwd())
 
-def createRes(epochs):
-    directory = "results/"+result_folder
-    name = model_savefile+str(epoch)+".pth"
-
-
+def createRes():
+    files = os.listdir("results/")
+    count = len(files)
+    directory = "results/"+result_folder + "_index_" + str(count) +'/'
+    return directory
+   
 def writeToFile(rewards, tempname, path):
     #path = "results/"
     suf = ".txt"
@@ -349,7 +350,8 @@ if __name__ == '__main__':
         game.set_window_visible(default.game_window_visible)
         game.set_mode(Mode.ASYNC_PLAYER)
         game.init()
-        path = "results/" +  
+        path = createRes()
+        os.mkdir(path)
         for epoch in eval_epoch:
             model = torch.load(model_abs_path + str(epoch) + '.pth')
             eval_scores = []
@@ -371,5 +373,5 @@ if __name__ == '__main__':
                     score = game.get_total_reward()
                     print("Total score: ", score)
                     eval_scores.append(score)
-            writeToFile(eval_scores, model_loadfile + str(epoch))
+            writeToFile(eval_scores, model_loadfile + str(epoch), path)
         
