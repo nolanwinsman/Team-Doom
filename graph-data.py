@@ -30,8 +30,8 @@ def loadInData(n):
 
 if __name__ == '__main__':
     #name = input("Filename? ")
-    path = "results/result_defend_the_center_epochs_20_index_0/"
-    filename = "Nolan_model_defend_the_center_epoch_"
+    path = "results/result_rocket_basic_epochs_20_index_1/"
+    filename = "Nolan_model_basic_epoch_"
     default = default_data()
     x = []
     for n in default.eval_epoch:

@@ -352,6 +352,7 @@ if __name__ == '__main__':
         game.init()
         path = createRes()
         os.mkdir(path)
+        print("writing to " + model_loadfile)
         for epoch in eval_epoch:
             model = torch.load(model_abs_path + str(epoch) + '.pth')
             eval_scores = []

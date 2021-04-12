@@ -9,7 +9,7 @@ class default_data:
         self.user = "Nolan"
 
         # Game scenario 
-        self.scenario = 'nolan_made'
+        self.scenario = 'rocket_basic'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
@@ -43,9 +43,9 @@ class default_data:
         self.model_savefile = "./model-doom.pth"
 
         # Look at the PTH files you are trying to evaluate
-        self.eval_epoch = [1, 5, 10, 15, 20]
-        self.model_loadfile = "model_nolan_made_epoch_"
-        self.model_abs_path = "./models/model_nolan_made_epochs_20_index_17_Nolan/"+self.model_loadfile
+        self.eval_epoch = [1,5,10,15,20]
+        self.model_loadfile = "model_basic_epoch_"
+        self.model_abs_path = "./models/model_basic_epochs_20_index_5_Nolan/"+self.model_loadfile
         
 
     
