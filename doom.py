@@ -52,6 +52,9 @@ model_loadfile = default.model_loadfile
 model_abs_path = default.model_abs_path
 skip_learning = default.skip_learning
 skip_evaluation = default.skip_evaluation
+# if they're both false
+if not (skip_evaluation and skip_learning):
+    print("BOTH FALSE")
 
 
 folder = False

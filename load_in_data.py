@@ -35,7 +35,7 @@ class default_data:
         # Booleans on whether or not the program learns and evaluates
         self.save_model = True
         self.load_model = False
-        self.skip_learning = True
+        self.skip_learning = False
         self.skip_evaluation = False
         self.game_window_visible = True
 
