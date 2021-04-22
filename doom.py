@@ -120,6 +120,7 @@ class Net(nn.Module):
         x = F.selu(self.fc1(x))
         return self.fc2(x)
 
+#currently does not work due to the FLAGS object
 class QNet(nn.Module):
     def __init__(self, available_actions_count):
         super(QNet, self).__init__()
@@ -162,6 +163,8 @@ class QNet(nn.Module):
         target_q[idxs] = r + FLAGS.discount * (1-isterminal) * q2
         self.train_step(s1, target_q)
 
+
+#TODO ADD credit to creator
 class DuelQNet(nn.Module):
     """
     This is Duel DQN architecture.
@@ -372,7 +375,8 @@ if __name__ == '__main__':
         model = torch.load(model_abs_path)
     else:
         print("Model not loaded")
-        model = DuelQNet(len(actions))
+        #model = DuelQNet(len(actions))
+        model = Net(len(actions))
         #model = Net(len(actions))
     #model = model.to('cuda')
 	

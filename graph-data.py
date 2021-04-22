@@ -11,10 +11,12 @@ def averageOfList(filename):
         l.append(float(seperator[1]))
     return np.average(l)
 
-def plotData(listX, listY, title):
-    plt.plot(listX, listY)
+def plotData(x, y1, y2, title):
+    plt.plot(x, y1, color='#0D87F2', label = "Original Net") #Net Blue
+    plt.plot(x, y2, color='#12F00E', label = "DuelQNet") #DQN Green
+    plt.legend(loc=2)
     plt.title(title)
-    plt.xlabel("Episodes")
+    plt.xlabel("Epoch")
     plt.ylabel("Reward")
     plt.show()
 def loadInData(n):
@@ -29,12 +31,17 @@ def loadInData(n):
 
 
 if __name__ == '__main__':
-    #name = input("Filename? ")
-    path = "results/result_rocket_basic_epochs_20_index_1/"
-    filename = "Nolan_model_basic_epoch_"
+    path = "results/result_rocket_basic_epochs_20_index_3_DuelQNet/"
+    filename = "Nolan_model_rocket_basic_epoch_"
+    path2 = "results/result_rocket_basic_epochs_20_index_4/"
+    filename2 = "Nolan_model_rocket_basic_epoch_"
     default = default_data()
-    x = []
+    Net = []
+    DQN = []
     for n in default.eval_epoch:
-        x.append(averageOfList(path + filename + str(n)))
+        Net.append(averageOfList(path + filename + str(n)))
+        DQN.append(averageOfList(path2 + filename2 + str(n)))
     print(default.eval_epoch)
-    plotData(default.eval_epoch, x, "Test")
+
+
+    plotData(default.eval_epoch, Net, DQN,  "Rocket Basic")
