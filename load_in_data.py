@@ -36,7 +36,7 @@ class default_data:
         self.save_model = True
         self.load_model = False
         self.skip_learning = False
-        self.skip_evaluation = False
+        self.skip_evaluation = True
         self.game_window_visible = True
 
 

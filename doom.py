@@ -52,9 +52,6 @@ model_loadfile = default.model_loadfile
 model_abs_path = default.model_abs_path
 skip_learning = default.skip_learning
 skip_evaluation = default.skip_evaluation
-# if they're both false
-if not (skip_evaluation and skip_learning):
-    print("BOTH FALSE")
 
 
 folder = False
@@ -117,11 +114,111 @@ class Net(nn.Module):
         self.fc2 = nn.Linear(128, available_actions_count)
 
     def forward(self, x):
+        x = F.selu(self.conv1(x))
+        x = F.selu(self.conv2(x))
+        x = x.view(-1, 192)
+        x = F.selu(self.fc1(x))
+        return self.fc2(x)
+
+class QNet(nn.Module):
+    def __init__(self, available_actions_count):
+        super(QNet, self).__init__()
+        self.conv1 = nn.Conv2d(1, 8, kernel_size=6, stride=3) # 8x9x14
+        self.conv2 = nn.Conv2d(8, 8, kernel_size=3, stride=2) # 8x4x6 = 192
+        self.fc1 = nn.Linear(192, 128)
+        self.fc2 = nn.Linear(128, available_actions_count)
+
+        self.criterion = nn.MSELoss()
+        self.optimizer = torch.optim.SGD(self.parameters(), FLAGS.learning_rate)
+        self.memory = ReplayMemory(capacity=FLAGS.replay_memory)
+
+    def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = x.view(-1, 192)
         x = F.relu(self.fc1(x))
         return self.fc2(x)
+
+    def get_best_action(self, state):
+        q = self(state)
+        _, index = torch.max(q, 1)
+        return index
+
+    def train_step(self, s1, target_q):
+        output = self(s1)
+        loss = self.criterion(output, target_q)
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+        return loss
+
+    def learn_from_memory(self):
+        if self.memory.size < FLAGS.batch_size: return
+        s1, a, s2, isterminal, r = self.memory.get_sample(FLAGS.batch_size)
+        q = self(s2).detach()
+        q2, _ = torch.max(q, dim=1)
+        target_q = self(s1).detach()
+        idxs = (torch.arange(target_q.shape[0]), a)
+        target_q[idxs] = r + FLAGS.discount * (1-isterminal) * q2
+        self.train_step(s1, target_q)
+
+class DuelQNet(nn.Module):
+    """
+    This is Duel DQN architecture.
+    see https://arxiv.org/abs/1511.06581 for more information.
+    """
+
+    def __init__(self, available_actions_count):
+        super(DuelQNet, self).__init__()
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(1, 8, kernel_size=3, stride=2, bias=False),
+            nn.BatchNorm2d(8),
+            nn.ReLU()
+        )
+
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(8, 8, kernel_size=3, stride=2, bias=False),
+            nn.BatchNorm2d(8),
+            nn.ReLU()
+        )
+
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(8, 8, kernel_size=3, stride=1, bias=False),
+            nn.BatchNorm2d(8),
+            nn.ReLU()
+        )
+
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(8, 16, kernel_size=3, stride=1, bias=False),
+            nn.BatchNorm2d(16),
+            nn.ReLU()
+        )
+
+        self.state_fc = nn.Sequential(
+            nn.Linear(96, 64),
+            nn.ReLU(),
+            nn.Linear(64, 1)
+        )
+
+        self.advantage_fc = nn.Sequential(
+            nn.Linear(96, 64),
+            nn.ReLU(),
+            nn.Linear(64, available_actions_count)
+        )
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = x.view(-1, 192)
+        x1 = x[:, :96]  # input for the net to calculate the state value
+        x2 = x[:, 96:]  # relative advantage of actions in the state
+        state_value = self.state_fc(x1).reshape(-1, 1)
+        advantage_values = self.advantage_fc(x2)
+        x = state_value + (advantage_values - advantage_values.mean(dim=1).reshape(-1, 1))
+
+        return x
 
 criterion = nn.MSELoss()
 
@@ -274,8 +371,9 @@ if __name__ == '__main__':
         print("Loading model from: ", model_loadfile)
         model = torch.load(model_abs_path)
     else:
-	    print("Model not loaded")
-	    model = Net(len(actions))
+        print("Model not loaded")
+        model = DuelQNet(len(actions))
+        #model = Net(len(actions))
     #model = model.to('cuda')
 	
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
