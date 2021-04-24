@@ -55,7 +55,7 @@ skip_evaluation = default.skip_evaluation
 
 
 folder = False
-model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_index_")
+model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_OGNET_index_")
 model_savefile = ("model_"+default.scenario+"_epoch_")
 result_folder = ("result_"+default.scenario+"_epochs_"+str(eval_epoch[-1]))
 
