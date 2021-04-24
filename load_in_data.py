@@ -9,7 +9,7 @@ class default_data:
         self.user = "Nolan"
 
         # Game scenario 
-        self.scenario = 'deadly_corridor'
+        self.scenario = 'rocket_basic'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
@@ -45,7 +45,7 @@ class default_data:
         # Look at the PTH files you are trying to evaluate
         self.eval_epoch = [1,5,10,15,20]
         self.model_loadfile = "model_rocket_basic_epoch_"
-        self.model_abs_path = "./models/model_rocket_basic_epochs_20_index_26_Nolan_DuelQNet/"+self.model_loadfile
+        self.model_abs_path = "./models/model_rocket_basic_epochs_20_index_8_Nolan/"+self.model_loadfile
         
 
     
