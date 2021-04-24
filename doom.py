@@ -55,7 +55,7 @@ skip_evaluation = default.skip_evaluation
 
 
 folder = False
-model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_index_")
+model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_OGNET_index_")
 model_savefile = ("model_"+default.scenario+"_epoch_")
 result_folder = ("result_"+default.scenario+"_epochs_"+str(eval_epoch[-1]))
 
@@ -164,13 +164,8 @@ class QNet(nn.Module):
         self.train_step(s1, target_q)
 
 
-#TODO ADD credit to creator
+#class created by Marek Wydmuch
 class DuelQNet(nn.Module):
-    """
-    This is Duel DQN architecture.
-    see https://arxiv.org/abs/1511.06581 for more information.
-    """
-
     def __init__(self, available_actions_count):
         super(DuelQNet, self).__init__()
         self.conv1 = nn.Sequential(
@@ -178,37 +173,31 @@ class DuelQNet(nn.Module):
             nn.BatchNorm2d(8),
             nn.ReLU()
         )
-
         self.conv2 = nn.Sequential(
             nn.Conv2d(8, 8, kernel_size=3, stride=2, bias=False),
             nn.BatchNorm2d(8),
             nn.ReLU()
         )
-
         self.conv3 = nn.Sequential(
             nn.Conv2d(8, 8, kernel_size=3, stride=1, bias=False),
             nn.BatchNorm2d(8),
             nn.ReLU()
         )
-
         self.conv4 = nn.Sequential(
             nn.Conv2d(8, 16, kernel_size=3, stride=1, bias=False),
             nn.BatchNorm2d(16),
             nn.ReLU()
         )
-
         self.state_fc = nn.Sequential(
             nn.Linear(96, 64),
             nn.ReLU(),
             nn.Linear(64, 1)
         )
-
         self.advantage_fc = nn.Sequential(
             nn.Linear(96, 64),
             nn.ReLU(),
             nn.Linear(64, available_actions_count)
         )
-
     def forward(self, x):
         x = self.conv1(x)
         x = self.conv2(x)
@@ -367,6 +356,16 @@ if __name__ == '__main__':
     for perm in it.product([False, True], repeat=actions_num):
         actions.append(list(perm))
 
+
+    # Uses GPU if available
+    if torch.cuda.is_available():
+        DEVICE = torch.device('cuda')
+        torch.backends.cudnn.benchmark = True
+        print("GPU Detected")
+    else:
+        DEVICE = torch.device('cpu')
+        print("Not using GPU")
+    
     # Create replay memory which will store the transitions
     memory = ReplayMemory(capacity=replay_memory_size)
 
@@ -377,12 +376,7 @@ if __name__ == '__main__':
         print("Model not loaded")
         #model = DuelQNet(len(actions))
         model = Net(len(actions))
-        #model = Net(len(actions))
-    #model = model.to('cuda')
-	
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    device = "cpu" #remove line to force GPU
-    model = model.to(device)
+        #model = model.to(DEVICE)
 	
     optimizer = torch.optim.SGD(model.parameters(), learning_rate)
 

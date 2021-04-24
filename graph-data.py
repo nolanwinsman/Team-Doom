@@ -31,10 +31,18 @@ def loadInData(n):
 
 
 if __name__ == '__main__':
+    #path = "results/result_rocket_basic_epochs_20_index_3_DuelQNet/"
+    #filename = "Nolan_model_rocket_basic_epoch_"
+    #path2 = "results/result_rocket_basic_epochs_20_index_4/"
+    #filename2 = "Nolan_model_rocket_basic_epoch_"
+
+
     path = "results/result_rocket_basic_epochs_20_index_3_DuelQNet/"
     filename = "Nolan_model_rocket_basic_epoch_"
     path2 = "results/result_rocket_basic_epochs_20_index_4/"
     filename2 = "Nolan_model_rocket_basic_epoch_"
+
+
     default = default_data()
     Net = []
     DQN = []
