@@ -10,7 +10,7 @@ class default_data:
         self.numLoops = 5
 
         # Game scenario 
-        self.scenario = 'defend_the_line'
+        self.scenario = 'health_gathering'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
@@ -33,7 +33,7 @@ class default_data:
 
         self.save_model = True
         self.load_model = False
-        self.skip_learning = True
+        self.skip_learning = False
         self.skip_evaluation = True #added line
         self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"

@@ -55,7 +55,7 @@ skip_evaluation = default.skip_evaluation
 
 
 folder = False
-model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_DQN_index_")
+model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_OGNET_index_")
 model_savefile = ("model_"+default.scenario+"_epoch_")
 result_folder = ("result_"+default.scenario+"_epochs_"+str(eval_epoch[-1]))
 
@@ -345,7 +345,7 @@ def initialize_vizdoom(config_file_path):
 
 
 if __name__ == '__main__':
-    for it in default.numLoops:
+    for x in range(default.numLoops):
         # Create Doom instance
         game = initialize_vizdoom(config_file_path)
         actions_num = game.get_available_buttons_size()
@@ -375,8 +375,8 @@ if __name__ == '__main__':
             model = torch.load(model_abs_path)
         else:
             print("Model not loaded")
-            model = DuelQNet(len(actions))
-            #model = Net(len(actions))
+            #model = DuelQNet(len(actions))
+            model = Net(len(actions))
             #model = model.to(DEVICE)
         
         optimizer = torch.optim.SGD(model.parameters(), learning_rate)
