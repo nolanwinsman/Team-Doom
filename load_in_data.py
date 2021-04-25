@@ -10,7 +10,7 @@ class default_data:
 
         # Game scenario 
 <<<<<<< HEAD
-        self.scenario = 'my_way_home'
+        self.scenario = 'deadly_corridor'
 =======
         self.scenario = 'rocket_basic'
 >>>>>>> d425d26cc22e9dace1d80b91c580c98d44725910
@@ -36,7 +36,7 @@ class default_data:
 
         self.save_model = True
         self.load_model = False
-        self.skip_learning = False
+        self.skip_learning = True
         self.skip_evaluation = True #added line
         self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"
