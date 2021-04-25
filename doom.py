@@ -55,7 +55,7 @@ skip_evaluation = default.skip_evaluation
 
 
 folder = False
-model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_OGNET_index_")
+model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_"+default.user+"_OGNET_index_")
 model_savefile = ("model_"+default.scenario+"_epoch_")
 result_folder = ("result_"+default.scenario+"_epochs_"+str(eval_epoch[-1]))
 
@@ -237,7 +237,7 @@ def writeToFile(rewards, tempname, path):
     count = len(files) -1
     name = "results"
     if tempname == '':
-        filename = path + name + str(count)+ '_'+ default.scenario +"_"+ str(epochs) + "Epochs_"+default.user + suf
+        filename = path + name + str(count)+ '_'+ default.scenario +"_"+ str(epochs) + "Epochs_"+default.user+"DQN"+ suf
     else:
         filename = path + default.user +'_'+ tempname + suf 
     f = open(filename, "w+")
@@ -386,7 +386,7 @@ if __name__ == '__main__':
         if not skip_learning:
             iterations = np.floor(epochs/4)
             files = os.listdir("models/")
-            model_folder = model_folder+str(len(files))+'_'+default.user
+            model_folder = model_folder+str(len(files))
             os.mkdir("models/"+model_folder)
             for epoch in range(1, epochs+1):
                 print("\nEpoch %d\n-------" % (epoch))
