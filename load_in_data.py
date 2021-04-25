@@ -6,11 +6,11 @@
 class default_data:
     def __init__(self):
         #whoever is running this code make sure you change the name to your first name
-        self.user = "Nolan"
+        self.user = "Tim"
         self.numLoops = 5
 
         # Game scenario 
-        self.scenario = 'rocket_basic'
+        self.scenario = 'defend_the_line'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
