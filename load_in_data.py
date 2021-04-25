@@ -37,15 +37,12 @@ class default_data:
         self.skip_evaluation = True #added line
         self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"
-<<<<<<< HEAD
         self.model_loadfile = "./model-doom.pth"
-=======
 
         # Look at the PTH files you are trying to evaluate
         self.eval_epoch = [1,5,10,15,20]
         self.model_loadfile = "model_rocket_basic_epoch_"
-        self.model_abs_path = "./models/model_rocket_basic_epochs_20_index_8_Nolan/"+self.model_loadfile
+        self.model_abs_path = "./models/model_rocket_basic_epochs_20_index_8_Nolan/"+self.model_loadfil
         
->>>>>>> d425d26cc22e9dace1d80b91c580c98d44725910
 
     
