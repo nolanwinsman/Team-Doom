@@ -345,133 +345,134 @@ def initialize_vizdoom(config_file_path):
 
 
 if __name__ == '__main__':
-    # Create Doom instance
-    game = initialize_vizdoom(config_file_path)
-    actions_num = game.get_available_buttons_size()
-    actions = []
-    # Action = which buttons are pressed
-    print('Availible Buttons: ',game.get_available_buttons())
-    print('Availible Actions: ',actions_num)
-  
-    for perm in it.product([False, True], repeat=actions_num):
-        actions.append(list(perm))
-
-
-    # Uses GPU if available
-    if torch.cuda.is_available():
-        DEVICE = torch.device('cuda')
-        torch.backends.cudnn.benchmark = True
-        print("GPU Detected")
-    else:
-        DEVICE = torch.device('cpu')
-        print("Not using GPU")
+    for it in default.numLoops:
+        # Create Doom instance
+        game = initialize_vizdoom(config_file_path)
+        actions_num = game.get_available_buttons_size()
+        actions = []
+        # Action = which buttons are pressed
+        print('Availible Buttons: ',game.get_available_buttons())
+        print('Availible Actions: ',actions_num)
     
-    # Create replay memory which will store the transitions
-    memory = ReplayMemory(capacity=replay_memory_size)
+        for perm in it.product([False, True], repeat=actions_num):
+            actions.append(list(perm))
 
-    if load_model:
-        print("Loading model from: ", model_loadfile)
-        model = torch.load(model_abs_path)
-    else:
-        print("Model not loaded")
-        model = DuelQNet(len(actions))
-        #model = Net(len(actions))
-        #model = model.to(DEVICE)
-	
-    optimizer = torch.optim.SGD(model.parameters(), learning_rate)
 
-    print("Starting the training!")
-    time_start = time()
-    if not skip_learning:
-        iterations = np.floor(epochs/4)
-        files = os.listdir("models/")
-        model_folder = model_folder+str(len(files))+'_'+default.user
-        os.mkdir("models/"+model_folder)
-        for epoch in range(1, epochs+1):
-            print("\nEpoch %d\n-------" % (epoch))
-            train_episodes_finished = 0
-            train_scores = []
+        # Uses GPU if available
+        if torch.cuda.is_available():
+            DEVICE = torch.device('cuda')
+            torch.backends.cudnn.benchmark = True
+            print("GPU Detected")
+        else:
+            DEVICE = torch.device('cpu')
+            print("Not using GPU")
+        
+        # Create replay memory which will store the transitions
+        memory = ReplayMemory(capacity=replay_memory_size)
 
-            print("Training...")
-            game.new_episode()
-            for learning_step in trange(learning_steps_per_epoch, leave=False):
-                perform_learning_step(epoch)
-                if game.is_episode_finished():
-                    score = game.get_total_reward()
-                    train_scores.append(score)
-                    game.new_episode()
-                    train_episodes_finished += 1
-            
-            print("%d training episodes played." % train_episodes_finished)
+        if load_model:
+            print("Loading model from: ", model_loadfile)
+            model = torch.load(model_abs_path)
+        else:
+            print("Model not loaded")
+            model = DuelQNet(len(actions))
+            #model = Net(len(actions))
+            #model = model.to(DEVICE)
+        
+        optimizer = torch.optim.SGD(model.parameters(), learning_rate)
 
-            train_scores = np.array(train_scores)
+        print("Starting the training!")
+        time_start = time()
+        if not skip_learning:
+            iterations = np.floor(epochs/4)
+            files = os.listdir("models/")
+            model_folder = model_folder+str(len(files))+'_'+default.user
+            os.mkdir("models/"+model_folder)
+            for epoch in range(1, epochs+1):
+                print("\nEpoch %d\n-------" % (epoch))
+                train_episodes_finished = 0
+                train_scores = []
 
-            print("Results: mean: %.1f +/- %.1f," % (train_scores.mean(), train_scores.std()), \
-                  "min: %.1f," % train_scores.min(), "max: %.1f," % train_scores.max())
-            avg_reward_per_episode.append(train_scores.mean())
-            #adds the data from train_scores into global list
-            for s in train_scores:
-                rewards_per_episode.append(s)
-
-            print("\nTesting...")
-            test_episode = []
-            test_scores = []
-            for test_episode in trange(test_episodes_per_epoch, leave=False):
+                print("Training...")
                 game.new_episode()
-                while not game.is_episode_finished():
-                    state = preprocess(game.get_state().screen_buffer)
-                    state = state.reshape([1, 1, resolution[0], resolution[1]])
-                    best_action_index = get_best_action(state)
+                for learning_step in trange(learning_steps_per_epoch, leave=False):
+                    perform_learning_step(epoch)
+                    if game.is_episode_finished():
+                        score = game.get_total_reward()
+                        train_scores.append(score)
+                        game.new_episode()
+                        train_episodes_finished += 1
+                
+                print("%d training episodes played." % train_episodes_finished)
 
-                    game.make_action(actions[best_action_index], frame_repeat)
-                r = game.get_total_reward()
-                test_scores.append(r)
+                train_scores = np.array(train_scores)
 
-            test_scores = np.array(test_scores)
-            print("Results: mean: %.1f +/- %.1f," % (
-                test_scores.mean(), test_scores.std()), "min: %.1f" % test_scores.min(),
-                  "max: %.1f" % test_scores.max())
+                print("Results: mean: %.1f +/- %.1f," % (train_scores.mean(), train_scores.std()), \
+                    "min: %.1f," % train_scores.min(), "max: %.1f," % train_scores.max())
+                avg_reward_per_episode.append(train_scores.mean())
+                #adds the data from train_scores into global list
+                for s in train_scores:
+                    rewards_per_episode.append(s)
 
-            if epoch % iterations == 0 or epoch == 1 or epoch == epochs:
-                createPTH(epoch)
-
-            print("Saving the network weigths to:", model_savefile)
-            #torch.save(model, model_savefile)
-
-            print("Total elapsed time: %.2f minutes" % ((time() - time_start) / 60.0))
-        #writeToFile(rewards_per_episode, '', "results/")
-    game.close()
-    print("======================================")
-    print("Training finished. It's time to watch!")
-
-    if not skip_evaluation:
-        # Reinitialize the game with window visible
-        game.set_window_visible(default.game_window_visible)
-        game.set_mode(Mode.ASYNC_PLAYER)
-        game.init()
-        path = createRes()
-        os.mkdir(path)
-        print("writing to " + model_loadfile)
-        for epoch in eval_epoch:
-            model = torch.load(model_abs_path + str(epoch) + '.pth')
-            eval_scores = []
-            for x in range(default.numEvaluations):
-                for _ in range(episodes_to_watch):
+                print("\nTesting...")
+                test_episode = []
+                test_scores = []
+                for test_episode in trange(test_episodes_per_epoch, leave=False):
                     game.new_episode()
                     while not game.is_episode_finished():
                         state = preprocess(game.get_state().screen_buffer)
                         state = state.reshape([1, 1, resolution[0], resolution[1]])
                         best_action_index = get_best_action(state)
 
-                        # Instead of make_action(a, frame_repeat) in order to make the animation smooth
-                        game.set_action(actions[best_action_index])
-                        for _ in range(frame_repeat):
-                            game.advance_action()
+                        game.make_action(actions[best_action_index], frame_repeat)
+                    r = game.get_total_reward()
+                    test_scores.append(r)
 
-                    # Sleep between episodes
-                    sleep(1.0)
-                    score = game.get_total_reward()
-                    print("Total score: ", score)
-                    eval_scores.append(score)
-            writeToFile(eval_scores, model_loadfile + str(epoch), path)
+                test_scores = np.array(test_scores)
+                print("Results: mean: %.1f +/- %.1f," % (
+                    test_scores.mean(), test_scores.std()), "min: %.1f" % test_scores.min(),
+                    "max: %.1f" % test_scores.max())
+
+                if epoch % iterations == 0 or epoch == 1 or epoch == epochs:
+                    createPTH(epoch)
+
+                print("Saving the network weigths to:", model_savefile)
+                #torch.save(model, model_savefile)
+
+                print("Total elapsed time: %.2f minutes" % ((time() - time_start) / 60.0))
+            #writeToFile(rewards_per_episode, '', "results/")
+        game.close()
+        print("======================================")
+        print("Training finished. It's time to watch!")
+
+        if not skip_evaluation:
+            # Reinitialize the game with window visible
+            game.set_window_visible(default.game_window_visible)
+            game.set_mode(Mode.ASYNC_PLAYER)
+            game.init()
+            path = createRes()
+            os.mkdir(path)
+            print("writing to " + model_loadfile)
+            for epoch in eval_epoch:
+                model = torch.load(model_abs_path + str(epoch) + '.pth')
+                eval_scores = []
+                for x in range(default.numEvaluations):
+                    for _ in range(episodes_to_watch):
+                        game.new_episode()
+                        while not game.is_episode_finished():
+                            state = preprocess(game.get_state().screen_buffer)
+                            state = state.reshape([1, 1, resolution[0], resolution[1]])
+                            best_action_index = get_best_action(state)
+
+                            # Instead of make_action(a, frame_repeat) in order to make the animation smooth
+                            game.set_action(actions[best_action_index])
+                            for _ in range(frame_repeat):
+                                game.advance_action()
+
+                        # Sleep between episodes
+                        sleep(1.0)
+                        score = game.get_total_reward()
+                        print("Total score: ", score)
+                        eval_scores.append(score)
+                writeToFile(eval_scores, model_loadfile + str(epoch), path)
         
