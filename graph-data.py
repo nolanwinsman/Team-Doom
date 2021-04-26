@@ -19,7 +19,7 @@ def plotData(x, y1, y2, title):
     #plt.legend(loc=2)
     plt.title(title)
     plt.xlabel("Epoch")
-    plt.ylabel("Reward")
+    plt.ylabel("Average Reward")
     plt.show()
 def loadInData(n):
     x = []
@@ -45,6 +45,8 @@ if __name__ == '__main__':
         l1 = []
         l2 = []
         for i in default.eval_epoch:
+            #filename = "results/OGNET_Rocket_Training_"+ str(x) +"/Nolan_model_rocket_basic_epoch_"+str(i)
+            #filename2 = "results/DQN_Rocket_Training_"+ str(x)+ "/Nolan_model_rocket_basic_epoch_"+str(i)
             filename = "results/OGNET_Rocket_Training_"+ str(x) +"/Nolan_model_rocket_basic_epoch_"+str(i)
             filename2 = "results/DQN_Rocket_Training_"+ str(x)+ "/Nolan_model_rocket_basic_epoch_"+str(i)
             l1.append(filename)
@@ -61,7 +63,7 @@ if __name__ == '__main__':
             l2.append(averageOfList(pathDQN[x][i]))
         Net.append(l1)
         DQN.append(l2)
-    plotData(default.eval_epoch, Net, DQN, "Title")
+    plotData(default.eval_epoch, Net, DQN, "Rocket Basic")
             
 
 
