@@ -36,20 +36,26 @@ if __name__ == '__main__':
     #path2 = "results/result_rocket_basic_epochs_20_index_4/"
     #filename2 = "Nolan_model_rocket_basic_epoch_"
 
-
-    path = "results/result_rocket_basic_epochs_20_index_3_DuelQNet/"
-    filename = "Nolan_model_rocket_basic_epoch_"
-    path2 = "results/result_rocket_basic_epochs_20_index_4/"
-    filename2 = "Nolan_model_rocket_basic_epoch_"
+    pathNet = []
+    pathDQN = []
+    x = 1
+    for x in range(1,6):
+        for i in default.eval_epoch:
+            pathNet.append("results/DQN_Rocket_Training_"+ str(x)+ "/Nolan_model_rocket_basic_epoch_"+str(i))
+            pathDQN.append("results/OGNET_Rocket_Training_"+ str(x) +"/Nolan_model_rocket_basic_epoch_"+str(i))
+            x += 5
+    print("Path: ")
+    print(pathDQN)
 
 
     default = default_data()
     Net = []
     DQN = []
     for n in default.eval_epoch:
-        Net.append(averageOfList(path + filename + str(n)))
-        DQN.append(averageOfList(path2 + filename2 + str(n)))
-    print(default.eval_epoch)
+        Net.append(averageOfList(pathNet[n]))
+        DQN.append(averageOfList(pathDQN[n]))
+    #print(Net)
+    #print(DQN)
 
 
-    plotData(default.eval_epoch, Net, DQN,  "Rocket Basic")
+    #plotData(default.eval_epoch, Net, DQN,  "Rocket Basic")
