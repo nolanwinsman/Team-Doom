@@ -12,9 +12,11 @@ def averageOfList(filename):
     return np.average(l)
 
 def plotData(x, y1, y2, title):
-    plt.plot(x, y1, color='#0D87F2', label = "Original Net") #Net Blue
-    plt.plot(x, y2, color='#12F00E', label = "DuelQNet") #DQN Green
-    plt.legend(loc=2)
+    for e in y1:
+        plt.plot(x, e, color='#0D87F2', label = "Original Net") #Net Blue
+    for e in y2:
+        plt.plot(x, y2, color='#12F00E', label = "DuelQNet") #DQN Green
+    #plt.legend(loc=2)
     plt.title(title)
     plt.xlabel("Epoch")
     plt.ylabel("Reward")
@@ -35,27 +37,33 @@ if __name__ == '__main__':
     #filename = "Nolan_model_rocket_basic_epoch_"
     #path2 = "results/result_rocket_basic_epochs_20_index_4/"
     #filename2 = "Nolan_model_rocket_basic_epoch_"
-
+    default = default_data()
     pathNet = []
     pathDQN = []
     x = 1
     for x in range(1,6):
+        l1 = []
+        l2 = []
         for i in default.eval_epoch:
-            pathNet.append("results/DQN_Rocket_Training_"+ str(x)+ "/Nolan_model_rocket_basic_epoch_"+str(i))
-            pathDQN.append("results/OGNET_Rocket_Training_"+ str(x) +"/Nolan_model_rocket_basic_epoch_"+str(i))
-            x += 5
-    print("Path: ")
-    print(pathDQN)
-
-
-    default = default_data()
+            filename = "results/OGNET_Rocket_Training_"+ str(x) +"/Nolan_model_rocket_basic_epoch_"+str(i)
+            filename2 = "results/DQN_Rocket_Training_"+ str(x)+ "/Nolan_model_rocket_basic_epoch_"+str(i)
+            l1.append(filename)
+            l2.append(filename2)
+        pathNet.append(l1)
+        pathDQN.append(l2)
+    print(pathNet[1][2])
     Net = []
     DQN = []
-    for n in default.eval_epoch:
-        Net.append(averageOfList(pathNet[n]))
-        DQN.append(averageOfList(pathDQN[n]))
-    #print(Net)
-    #print(DQN)
+    for x in range(0,5):
+        l1 = []
+        l2 = []
+        for i in range(len(default.eval_epoch)):
+            l1.append(averageOfList(pathNet[x][i]))
+            l2.append(averageOfList(pathDQN[x][i]))
+        Net.append(l1)
+        DQN.append(l2)
+    plotData(default.eval_epoch, Net, DQN, "Title")
+            
 
 
     #plotData(default.eval_epoch, Net, DQN,  "Rocket Basic")

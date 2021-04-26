@@ -43,7 +43,7 @@ class default_data:
         # Look at the PTH files you are trying to evaluate
         self.eval_epoch = [1,5,10,15,20]
         self.model_loadfile = "model_rocket_basic_epoch_"
-        self.model_abs_path = "./models/model_rocket_basic_epochs_20_OGNET_index_23_Nolan/"+self.model_loadfile
+        self.model_abs_path = "./models/model_rocket_basic_epochs_20_OGNET_index_22_Nolan/"+self.model_loadfile
         
 
     
