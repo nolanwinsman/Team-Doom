@@ -55,7 +55,7 @@ skip_evaluation = default.skip_evaluation
 
 
 folder = False
-model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_"+default.user+"_DQN_index_")
+model_folder = ("model_"+default.scenario+"_epochs_"+str(epochs)+"_"+default.user+"_OGNET_index_")
 model_savefile = ("model_"+default.scenario+"_epoch_")
 result_folder = ("result_"+default.scenario+"_epochs_"+str(eval_epoch[-1]))
 
@@ -375,8 +375,8 @@ if __name__ == '__main__':
             model = torch.load(model_abs_path)
         else:
             print("Model not loaded")
-            model = DuelQNet(len(actions))
-            #model = Net(len(actions))
+            #model = DuelQNet(len(actions))
+            model = Net(len(actions))
             #model = model.to(DEVICE)
         
         optimizer = torch.optim.SGD(model.parameters(), learning_rate)
@@ -453,26 +453,27 @@ if __name__ == '__main__':
             path = createRes()
             os.mkdir(path)
             print("writing to " + model_loadfile)
-            for epoch in eval_epoch:
-                model = torch.load(model_abs_path + str(epoch) + '.pth')
-                eval_scores = []
-                for x in range(default.numEvaluations):
-                    for _ in range(episodes_to_watch):
-                        game.new_episode()
-                        while not game.is_episode_finished():
-                            state = preprocess(game.get_state().screen_buffer)
-                            state = state.reshape([1, 1, resolution[0], resolution[1]])
-                            best_action_index = get_best_action(state)
+            for network in model_abs_path:
+                for epoch in eval_epoch:
+                    model = torch.load(network + str(epoch) + '.pth')
+                    eval_scores = []
+                    for x in range(default.numEvaluations):
+                        for _ in range(episodes_to_watch):
+                            game.new_episode()
+                            while not game.is_episode_finished():
+                                state = preprocess(game.get_state().screen_buffer)
+                                state = state.reshape([1, 1, resolution[0], resolution[1]])
+                                best_action_index = get_best_action(state)
 
-                            # Instead of make_action(a, frame_repeat) in order to make the animation smooth
-                            game.set_action(actions[best_action_index])
-                            for _ in range(frame_repeat):
-                                game.advance_action()
+                                # Instead of make_action(a, frame_repeat) in order to make the animation smooth
+                                game.set_action(actions[best_action_index])
+                                for _ in range(frame_repeat):
+                                    game.advance_action()
 
-                        # Sleep between episodes
-                        sleep(1.0)
-                        score = game.get_total_reward()
-                        print("Total score: ", score)
-                        eval_scores.append(score)
-                writeToFile(eval_scores, model_loadfile + str(epoch), path)
-        
+                            # Sleep between episodes
+                            sleep(1.0)
+                            score = game.get_total_reward()
+                            print("Total score: ", score)
+                            eval_scores.append(score)
+                    writeToFile(eval_scores, model_loadfile + str(epoch), path)
+            

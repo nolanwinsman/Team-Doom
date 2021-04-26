@@ -6,7 +6,7 @@
 class default_data:
     def __init__(self):
         #whoever is running this code make sure you change the name to your first name
-        self.user = "Tim"
+        self.user = "Ethan"
         self.numLoops = 5
 
         # Game scenario 
@@ -42,8 +42,12 @@ class default_data:
 
         # Look at the PTH files you are trying to evaluate
         self.eval_epoch = [1,5,10,15,20]
-        self.model_loadfile = "model_deadly_corridor_epoch_"
-        self.model_abs_path = "./models/model_deadly_corridor_epochs_20_Nolan_DQN_index_34/"+self.model_loadfile
+        self.model_loadfile = "model_take_cover_epoch_"
+        self.model_abs_path = []
+        x = 35
+        while x <= 39:
+            self.model_abs_path.append("./models/model_take_cover_epochs_20_Nolan_OGNET_index_"+str(x)+"/"+self.model_loadfile)
+            x+=1
         
 
     
