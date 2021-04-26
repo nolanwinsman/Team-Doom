@@ -51,7 +51,6 @@ if __name__ == '__main__':
             l2.append(filename2)
         pathNet.append(l1)
         pathDQN.append(l2)
-    print(pathNet[1][2])
     Net = []
     DQN = []
     for x in range(0,5):
