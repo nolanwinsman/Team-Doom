@@ -63,6 +63,8 @@ result_folder = ("result_"+default.scenario+"_epochs_"+str(eval_epoch[-1]))
 rewards_per_episode = []
 avg_reward_per_episode = [] #TODO store the average score per episode
 
+randomNum = 1
+
 # Configuration file path
 # config_file_path = "scenarios/nolan_made.cfg"
 config_file_path = default.config_file_path
@@ -450,10 +452,11 @@ if __name__ == '__main__':
             game.set_window_visible(default.game_window_visible)
             game.set_mode(Mode.ASYNC_PLAYER)
             game.init()
-            path = createRes()
-            os.mkdir(path)
-            print("writing to " + model_loadfile)
             for network in model_abs_path:
+                print(network)
+                path = createRes()
+                os.mkdir(path)
+                print("writing to " + path)
                 for epoch in eval_epoch:
                     model = torch.load(network + str(epoch) + '.pth')
                     eval_scores = []
