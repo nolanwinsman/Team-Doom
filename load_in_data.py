@@ -6,11 +6,11 @@
 class default_data:
     def __init__(self):
         #whoever is running this code make sure you change the name to your first name
-        self.user = "Nolan"
-        self.numLoops = 5
+        self.user = "Ethan"
+        self.numLoops = 1
 
         # Game scenario 
-        self.scenario = 'basic'
+        self.scenario = 'health_gathering'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
@@ -33,8 +33,8 @@ class default_data:
 
         self.save_model = True
         self.load_model = False
-        self.skip_learning = False
-        self.skip_evaluation = True #added line
+        self.skip_learning = True
+        self.skip_evaluation = False #added line
         self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"
         self.model_loadfile = "./model-doom.pth"
@@ -42,11 +42,11 @@ class default_data:
 
         # Look at the PTH files you are trying to evaluate
         self.eval_epoch = [1,5,10,15,20]
-        self.model_loadfile = "model_deadly_corridor_epoch_"
+        self.model_loadfile = "model_health_gathering_epoch_"
         self.model_abs_path = []
-        x = 30
-        while x <= 34:
-            self.model_abs_path.append("./models/model_deadly_corridor_epochs_20_Nolan_DQN_index_"+str(x)+"/"+self.model_loadfile)
+        x = 24
+        while x <= 28:
+            self.model_abs_path.append("./models/model_health_gathering_epochs_20_Ethan_OGNET_index_"+str(x)+"/"+self.model_loadfile)
             x+=1
         
 
