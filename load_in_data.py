@@ -7,10 +7,10 @@ class default_data:
     def __init__(self):
         #whoever is running this code make sure you change the name to your first name
         self.user = "Nolan"
-        self.numLoops = 1
+        self.numLoops = 5
 
         # Game scenario 
-        self.scenario = 'deadly_corridor'
+        self.scenario = 'basic'
         self.config_file_path = "scenarios/"+self.scenario+".cfg"
         
         # Q-learning settings
@@ -33,8 +33,8 @@ class default_data:
 
         self.save_model = True
         self.load_model = False
-        self.skip_learning = True
-        self.skip_evaluation = False #added line
+        self.skip_learning = False
+        self.skip_evaluation = True #added line
         self.game_window_visible = True
         self.model_savefile = "./model-doom.pth"
         self.model_loadfile = "./model-doom.pth"

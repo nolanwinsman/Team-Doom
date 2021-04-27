@@ -12,11 +12,24 @@ def averageOfList(filename):
     return np.average(l)
 
 def plotData(x, y1, y2, title):
-    for e in y1:
-        plt.plot(x, e, color='#0D87F2', label = "Original Net") #Net Blue
-    for e in y2:
-        plt.plot(x, y2, color='#12F00E', label = "DuelQNet") #DQN Green
-    #plt.legend(loc=2)
+    plt.plot(x, y1[0], color='#0D87F2', label = "Original Net") #Net Blue
+    plt.plot(x, y2[0], color='#12F00E', label = "DuelQNet") #DQN Green
+    plt.scatter(x, y1[0], color='#0D87F2') #Net Blue
+    plt.scatter(x, y2[0], color='#12F00E') #DQN Green
+
+    print("OGNet Epoch: " + "1 " + str(y1[0]))
+    print("DQN   Epoch: " + "1 " + str(y2[0]))
+
+    for i in range(1,len(y1)):
+        plt.plot(x, y1[i], color='#0D87F2') #Net Blue
+        plt.plot(x, y2[i], color='#12F00E') #DQN Green
+        plt.scatter(x, y1[i], color='#0D87F2') #Net Blue
+        plt.scatter(x, y2[i], color='#12F00E') #DQN Green
+
+        print("OGNet Epoch: " + str(default.eval_epoch[i]) +" " + str(y1[i]))
+        print("DQN   Epoch: " + str(default.eval_epoch[i]) +" " + str(y2[i]))
+        
+    plt.legend(loc=2)
     plt.title(title)
     plt.xlabel("Epoch")
     plt.ylabel("Average Reward")
@@ -32,25 +45,44 @@ def loadInData(n):
     return x,y
 
 
+default = default_data()
+
+
 if __name__ == '__main__':
-    #path = "results/result_rocket_basic_epochs_20_index_3_DuelQNet/"
-    #filename = "Nolan_model_rocket_basic_epoch_"
-    #path2 = "results/result_rocket_basic_epochs_20_index_4/"
-    #filename2 = "Nolan_model_rocket_basic_epoch_"
-    default = default_data()
     pathNet = []
     pathDQN = []
+    title = "Deadly Corridor"
+    print(title)
+
+    #rocket basic
+    rocket_basic = []
+    rocket_basic.append("results/OGNET_Rocket_Training_")
+    rocket_basic.append("results/DQN_Rocket_Training_")
+    rocket_basic.append("/Nolan_model_rocket_basic_epoch_")
+    rocket_basic.append("/Nolan_model_rocket_basic_epoch_")
+
+    #deadly corridor
+    deadly_corridor = []
+    deadly_corridor.append("results/OGNET_Deadly_Training_")
+    deadly_corridor.append("results/DQN_Deadly_Training_")
+    deadly_corridor.append("/Nolan_model_deadly_corridor_epoch_")
+    deadly_corridor.append("/Nolan_model_deadly_corridor_epoch_")
+
+    #Take Cover
+    take_cover = []
+    take_cover.append("results/OGNET_Cover_Training_")
+    take_cover.append("results/null")
+    take_cover.append("/Ethan_model_take_cover_epoch_")
+    take_cover.append("/null")
+
+    toChoose = deadly_corridor
     x = 1
     for x in range(1,6):
         l1 = []
         l2 = []
         for i in default.eval_epoch:
-            #filename = "results/OGNET_Rocket_Training_"+ str(x) +"/Nolan_model_rocket_basic_epoch_"+str(i)
-            #filename2 = "results/DQN_Rocket_Training_"+ str(x)+ "/Nolan_model_rocket_basic_epoch_"+str(i)
-            filename = "results/OGNET_Rocket_Training_"+ str(x) +"/Nolan_model_rocket_basic_epoch_"+str(i)
-            filename2 = "results/DQN_Rocket_Training_"+ str(x)+ "/Nolan_model_rocket_basic_epoch_"+str(i)
-            l1.append(filename)
-            l2.append(filename2)
+            l1.append(toChoose[0] + str(x) + toChoose[2] + str(i))
+            l2.append(toChoose[1] + str(x) + toChoose[3] + str(i))
         pathNet.append(l1)
         pathDQN.append(l2)
     Net = []
@@ -63,7 +95,7 @@ if __name__ == '__main__':
             l2.append(averageOfList(pathDQN[x][i]))
         Net.append(l1)
         DQN.append(l2)
-    plotData(default.eval_epoch, Net, DQN, "Rocket Basic")
+    plotData(default.eval_epoch, Net, DQN, title)
             
 
 
