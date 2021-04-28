@@ -34,6 +34,32 @@ def plotData(x, y1, y2, title):
     plt.xlabel("Epoch")
     plt.ylabel("Average Reward")
     plt.show()
+
+def plotDataAvg(x, y1, y2, title):
+    val1 = []
+    val2 = []
+    title = "Average " + title
+    for i in range(0,len(y1)):
+        temp1 = []
+        temp2 = []
+        for j in range(0,len(y1[i])):
+            temp1.append(y1[j][i])
+            temp2.append(y2[j][i])
+        val1.append(np.average(temp1))
+        val2.append(np.average(temp2))
+
+    plt.plot(x, val1, color='#0D87F2', label = "Original Net Avg") #Net Blue
+    plt.plot(x, val2, color='#12F00E', label = "DuelQNet Avg") #DQN Green
+    plt.scatter(x, val1, color='#0D87F2') #Net Blue
+    plt.scatter(x, val2, color='#12F00E') #DQN Green
+        
+    plt.legend(loc=2)
+    plt.title(title)
+    plt.xlabel("Epoch")
+    plt.ylabel("Average Reward")
+    plt.show()
+
+
 def loadInData(n):
     x = []
     y = []
@@ -51,7 +77,7 @@ default = default_data()
 if __name__ == '__main__':
     pathNet = []
     pathDQN = []
-    title = "Deadly Corridor"
+    title = "Rocket Basic"
     print(title)
 
     #rocket basic
@@ -75,7 +101,14 @@ if __name__ == '__main__':
     take_cover.append("/Ethan_model_take_cover_epoch_")
     take_cover.append("/null")
 
-    toChoose = deadly_corridor
+    #Health Gathering
+    health_gathering = []
+    health_gathering.append("results/OGNET_HealthSimple_Training_")
+    health_gathering.append("results/DQN_HealthSimple_Training_")
+    health_gathering.append("/Ethan_model_health_gathering_epoch_")
+    health_gathering.append("/Nolan_model_health_gathering_epoch_")
+
+    toChoose = rocket_basic
     x = 1
     for x in range(1,6):
         l1 = []
@@ -95,8 +128,6 @@ if __name__ == '__main__':
             l2.append(averageOfList(pathDQN[x][i]))
         Net.append(l1)
         DQN.append(l2)
-    plotData(default.eval_epoch, Net, DQN, title)
+    #plotData(default.eval_epoch, Net, DQN, title)
+    plotDataAvg(default.eval_epoch, Net, DQN, title)
             
-
-
-    #plotData(default.eval_epoch, Net, DQN,  "Rocket Basic")
